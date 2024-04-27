@@ -52,3 +52,18 @@ def analyze(img_path, actions, detector_backend, enforce_detection, align):
         return result
     except Exception as err:
         return {"error": f"Exception while analyzing: {str(err)}"}, 400
+
+def find(img_path, db_path, model_name, detector_backend, distance_metric, enforce_detection, align):
+    try:
+        obj = DeepFace.find(
+            img_path=img_path,
+            db_path=db_path,
+            model_name=model_name,
+            detector_backend=detector_backend,
+            distance_metric=distance_metric,
+            align=align,
+            enforce_detection=enforce_detection,
+        )
+        return obj
+    except Exception as err:
+        return {"error": f"Exception while Findind: {str(err)}"}, 400
