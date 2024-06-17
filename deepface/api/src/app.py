@@ -2,6 +2,7 @@
 from flask import Flask
 from deepface.api.src.modules.core.routes import blueprint
 import argparse
+import os
 
 def create_app():
     app = Flask(__name__)
