@@ -8,6 +8,12 @@ def create_app():
     print(app.url_map)
     return app
 
+def create_online_app():
+    app = Flask(__name__)
+    app.register_blueprint(blueprint)
+    app.run(host="0.0.0.0", 5000 , debug = true)
+    return app
+
 # print('hi')
 # print(blueprint)
 # print('hi')
