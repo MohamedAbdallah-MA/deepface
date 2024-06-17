@@ -156,6 +156,18 @@ def find():
     distance_metric = input_args.get("distance_metric", "euclidean_l2")
     align = input_args.get("align", True)
 
+    if img_name is None:
+        return {"message": "you must pass img1_path input"}
+
+    if db_path is None:
+        dataset_path = os.path.join(path.get_parent_path(), 'dataset')
+        if img_type == "missing_person":
+            img_path = os.path.join(dataset_path, 'missing_people', img_name)
+            db_path = os.path.join(dataset_path, 'founded_people')
+        elif img_type == "founded_people":
+            img_path = os.path.join(dataset_path, 'founded_people', img_name)
+            db_path = os.path.join(dataset_path, 'missing_people')
+
     results = service.find(
         img_path=img_path,
         db_path=db_path,
@@ -169,7 +181,6 @@ def find():
     # Calculate similarity_percentage for each row
     results[0]['similarity_percentage'] =100 - ((results[0]['distance'] / results[0]['threshold']) * 100)
 
-    # Convert DataFrame to list of dictionaries
     data = []
     for _, row in results[0].iterrows():
         data.append({
@@ -177,8 +188,8 @@ def find():
             "similarity_percentage": row['similarity_percentage']
         })
 
-    # Convert list of dictionaries to JSON format
     json_data = json.dumps(data, indent=4)
+
 
     logger.debug(json_data)
     return json_data
