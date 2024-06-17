@@ -67,3 +67,11 @@ def find(img_path, db_path, model_name, detector_backend, distance_metric, enfor
         return obj
     except Exception as err:
         return {"error": f"Exception while Findind: {str(err)}"}, 400
+
+
+def sync_datasets():
+    try:
+        DeepFace.sync_datasets()
+        return {'data': 'synced successfully'}, 200
+    except Exception as e:
+        return {'error': str(e)}, 400

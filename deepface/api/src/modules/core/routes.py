@@ -1,7 +1,9 @@
 from flask import Blueprint, request , jsonify
 from deepface.api.src.modules.core import service
 from deepface.commons.logger import Logger
+from deepface.commons.os_path import os_path
 import json
+import os
 
 logger = Logger(module="api/src/routes.py")
 
@@ -112,18 +114,44 @@ def find():
     input_args = request.get_json()
 
     if input_args is None:
-        return {"message": "empty input set passed"}
+        response = jsonify({'error': 'empty input set passed'})
+        response.status_code = 500
+        return response
 
-    img_path = input_args.get("img") or input_args.get("img_name")
-    db_path = input_args.get("db_path")
+    img_name = input_args.get("img") or input_args.get("img_name")
     img_type = input_args.get("img_type")
 
-    # if img_path is None:
-    #     return {"message": "you must pass img1_path input"}
+    if img_name is None:
+        response = jsonify({'error': 'you must pass img_name input'})
+        response.status_code = 404
+        return response
 
-    img_path = "C:\\Users\\moham\\OneDrive\\Desktop\\del3\\dataset\\missing_people\\m0.jpg"
+    if img_type == "missing" or img_type == "missing_person" or img_type == "missing_people" or img_type == "missing person" or img_type == "missing people" :
+        
+        img_path = os.path.join( os_path.get_main_directory() , 'mafqoud' , 'images' , "missing_people" , img_name)
+        db_path = os.path.join( os_path.get_main_directory() , 'mafqoud' , 'images' , "founded_people")
+        
+    elif img_type == "founded" or img_type == "founded_person" or img_type == "founded_people" or img_type == "founded person" or img_type == "founded people" :
+    
+        img_path = os.path.join( os_path.get_main_directory() , 'mafqoud' , 'images' , "founded_people" , img_name)
+        db_path = os.path.join( os_path.get_main_directory() , 'mafqoud' , 'images' , "missing_people")
+
+    else :
+
+        response = jsonify({'error': 'the type of the image is not correct and it should be one of those : ( missing , missing_people , missing_people , missing person , missing people ) or ( founded , founded_people , founded_people , founded person , founded people )'})
+        response.status_code = 400
+        return response
+    
+    
+    if not os.path.exists(img_path) or not os.path.isfile(img_path):
+        # If the image does not exist, return a JSON response with status code 404
+        response = jsonify({'error': 'Image not found'})
+        response.status_code = 404
+        return response
+    
+        
     model_name = input_args.get("model_name", "Facenet512")
-    detector_backend = input_args.get("detector_backend", "yolov8")
+    detector_backend = input_args.get("detector_backend", "mtcnn")
     enforce_detection = input_args.get("enforce_detection", True)
     distance_metric = input_args.get("distance_metric", "euclidean_l2")
     align = input_args.get("align", True)
@@ -151,14 +179,12 @@ def find():
 
     # Convert list of dictionaries to JSON format
     json_data = json.dumps(data, indent=4)
-    # results[0]['similarity_percentage'] = results[0]['distance'] / results[0]['threshold'] * 100
-    # json_dict = results[0].to_dict(orient='records')
+
     logger.debug(json_data)
     return json_data
-    # return json.dumps(results[0], indent=4)
-    # return "string"
-    # return jsonify(results)
-    # return json.dumps(results)
-    # json_response = [{"result" : result} for result in results]
-    # return json_responseturn 
-    # return results.to_json()
+
+
+@blueprint.route("/dataset/sync", methods=["GET"])
+def sync_datasets():
+    result = service.sync_datasets()
+    return jsonify(result)

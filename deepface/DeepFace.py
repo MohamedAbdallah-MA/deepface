@@ -3,6 +3,7 @@ import os
 import warnings
 import logging
 from typing import Any, Dict, List, Union, Optional
+from deepface.commons.os_path import os_path
 
 # this has to be set before importing tensorflow
 os.environ["TF_USE_LEGACY_KERAS"] = "1"
@@ -26,6 +27,7 @@ from deepface.modules import (
     detection,
     streaming,
     preprocessing,
+    cloudservice,
 )
 from deepface import __version__
 
@@ -550,3 +552,21 @@ def detectFace(
         extracted_face = face_objs[0]["face"]
         extracted_face = preprocessing.resize_image(img=extracted_face, target_size=target_size)
     return extracted_face
+
+
+def sync_datasets():
+    # Set the local directories
+    base_dir = os_path.get_main_directory()
+
+    missing_dir = os.path.join(base_dir, 'mafqoud', 'images', 'missing_people')
+    founded_dir = os.path.join(base_dir, 'mafqoud', 'images', 'founded_people')
+
+    # Ensure the directories exist
+    os.makedirs(missing_dir, exist_ok=True)
+    os.makedirs(founded_dir, exist_ok=True)
+
+    cloudservice.delete_pkl_files(missing_dir)
+    missing_people = cloudservice.sync_folder('missing_people', missing_dir)
+    cloudservice.delete_pkl_files(founded_dir)
+    founded_people = cloudservice.sync_folder('founded_people', founded_dir)
+
