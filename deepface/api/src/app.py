@@ -11,7 +11,7 @@ def create_app():
 def create_online_app():
     app = Flask(__name__)
     app.register_blueprint(blueprint)
-    app.run(host="0.0.0.0", 5000 , debug = true)
+    app.run(host="0.0.0.0", port=5000 , debug=True)
     return app
 
 # print('hi')
