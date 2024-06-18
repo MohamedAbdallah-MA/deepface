@@ -52,5 +52,5 @@ ENV PYTHONUNBUFFERED=1
 # -----------------------------------
 # run the app (re-configure port if necessary)
 WORKDIR /app/deepface/api/src
-EXPOSE 5000
+EXPOSE 15000
 CMD ["gunicorn", "--workers=1", "--timeout=3600", "--bind=0.0.0.0:15000", "app:create_app()"]
