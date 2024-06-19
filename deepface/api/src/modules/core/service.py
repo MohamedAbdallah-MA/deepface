@@ -75,3 +75,10 @@ def sync_datasets():
         return {'data': 'synced successfully'}, 200
     except Exception as e:
         return {'error': str(e)}, 400
+
+def delete_pkls():
+    try:
+        DeepFace.delete_pkls()
+        return {'data': 'pkl files deleted successfully'}, 200
+    except Exception as e:
+        return {'error': str(e)}, 400

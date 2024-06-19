@@ -142,7 +142,7 @@ def find():
         response.status_code = 400
         return response
     
-    
+    print(img_path)
     if not os.path.exists(img_path) or not os.path.isfile(img_path):
         # If the image does not exist, return a JSON response with status code 404
         response = jsonify({'error': 'Image not found'})
@@ -198,4 +198,10 @@ def find():
 @blueprint.route("/dataset/sync", methods=["GET"])
 def sync_datasets():
     result = service.sync_datasets()
+    return jsonify(result)
+
+
+@blueprint.route("/delete/pkls", methods=["GET"])
+def delete_pkls():
+    result = service.delete_pkls()
     return jsonify(result)
