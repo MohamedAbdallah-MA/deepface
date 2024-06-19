@@ -565,8 +565,21 @@ def sync_datasets():
     os.makedirs(missing_dir, exist_ok=True)
     os.makedirs(founded_dir, exist_ok=True)
 
-    cloudservice.delete_pkl_files(missing_dir)
     missing_people = cloudservice.sync_folder('missing_people', missing_dir)
-    cloudservice.delete_pkl_files(founded_dir)
+
     founded_people = cloudservice.sync_folder('founded_people', founded_dir)
+
+def delete_pkls():
+    # Set the local directories
+    base_dir = os_path.get_main_directory()
+
+    missing_dir = os.path.join(base_dir, 'mafqoud', 'images', 'missing_people')
+    founded_dir = os.path.join(base_dir, 'mafqoud', 'images', 'founded_people')
+
+    # Ensure the directories exist
+    os.makedirs(missing_dir, exist_ok=True)
+    os.makedirs(founded_dir, exist_ok=True)
+
+    cloudservice.delete_pkl_files(missing_dir)
+    cloudservice.delete_pkl_files(founded_dir)
 
