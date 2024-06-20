@@ -4,6 +4,7 @@ from deepface.commons.logger import Logger
 from deepface.commons.os_path import os_path
 import json
 import os
+import pandas as pd
 
 logger = Logger(module="api/src/routes.py")
 
@@ -178,8 +179,11 @@ def find():
         enforce_detection=enforce_detection,
     )
 
+    if len(results) > 1 and not isinstance(results[1], pd.DataFrame) :
+        return results
+
     # Calculate similarity_percentage for each row
-    results[0]['similarity_percentage'] =100 - ((results[0]['distance'] / results[0]['threshold']) * 100)
+    results[0]['similarity_percentage'] = 100 - ((results[0]['distance'] / results[0]['threshold']) * 100)
 
     data = []
     for _, row in results[0].iterrows():
