@@ -8,3 +8,6 @@ class os_path :
         if not drive.endswith(os.path.sep):
             drive += os.path.sep
         return drive
+
+    def get_main_drive_directory():
+        return '/content/drive/MyDrive'

@@ -14,3 +14,4 @@ fire>=0.4.0
 gunicorn>=20.1.0
 cloudinary>=1.40.0
 python-dotenv>=1.0.1
+pyngrok>=7.1.6
